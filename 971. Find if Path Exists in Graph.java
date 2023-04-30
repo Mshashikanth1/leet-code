@@ -50,11 +50,162 @@ class Solution {
            for(int[] edge : edges){
                uf.union(edge[0],edge[1]);
            }
+        //    for(int i : uf.root)
+        //    System.out.print(i+",");
 
-           return uf.isConnected(source,destination);
+        //     System.out.println("");
+
+        //    for(int j: uf.rank)
+        //    System.out.print(j+",");
+
+          return uf.isConnected(source,destination)
+            &&
+           this.BFS(n,edges,source,destination)
+            &&
+           this.DFS_ITR(n,edges,source,destination)
+           &&
+           DFS(n,edges,source,destination);
            
         
     }
+//Appraoch 1
+/**
+BFS 
+1.initialize an empty queue to store the nodes to ve visited
+2.use one boolean array seen to mark all visited nodes and has map to stored all edges
+3.add the starting node 0 to queue and mark it as visited
+4. if queue has nodes , ge the fisr node curr_node from queue . return true if curr_node is destination, other vise got to setep 5.
+5. Add all unvisited neighbor nodes of current_node to queue and mark them as visited, then repeat step 4.
+6. if we emptied queue without finding destination, return false.
+
+ complexity complexity Analysis:
+let n be the number of nodes and m be the number of edges
+.Time complexity:O(n+m):
+
+in a typical bfs search , the time complexity is O(V+E) where v is the nuber of vertices and E is the number of edges . there are n nodes and m edges in this problems 
+ we build adjacent list of all m edgs in graph which takes O(m)
+
+ each node is added to the queue and popped from queue once it takes on(n) to handel all nodes
+ time complexity : O(n+m)
+
+ space complexity O(n+m)
+ .. we used a hashmap neightbors to store all edges, which requiere O(m) space for m edges.
+ ... we use seen, either a hash set or an array to record the visited nodes, which takes O(n space)
+ there for the space complexity is O(n+m);
+
+ */
+
+    public boolean BFS(int n, int[][] edges, int source, int destination){
+        
+            Queue<Integer> queue=new PriorityQueue<>();
+            Boolean[] seen =new Boolean[n];
+            Arrays.fill(seen,false);
+            Map<Integer,List<Integer>> graph= new HashMap<>();
+
+            for(int[] edge : edges){
+                int a=edge[0],b=edge[1];
+                graph.computeIfAbsent(a,val->new ArrayList<Integer>()).add(b);
+                graph.computeIfAbsent(b,val->new ArrayList<Integer>()).add(a);
+            }
+
+            queue.offer(source);
+            seen[source]=true;
+
+            while(!queue.isEmpty()){
+                int currNode=queue.poll();
+                if(currNode==destination){
+                    return true;
+                }
+
+                for(int nextNode: graph.get(currNode)){
+                    if(!seen[nextNode]){
+                        seen[nextNode]=true;
+                        queue.offer(nextNode);
+                    }
+                }
+            }
+
+
+            return false;
+
+    }
+
+
+//Approach 2 DFS 
+/*
+Algorithm :
+1.use boolean array seen to mark all the visited nodes set seen[source]=true;
+2. use a hashmap graph to store all edges.
+3. start the search for node source. if the current node are we visiteng (curr_node ) equla s destination, return true. otherwise find all its neghbor nodes that haven;t been visited before
+if there exixts such a neightbor , mark it as visited, move on to this node and repeat step 3.
+if this neighbor node can reach destination, then return true, other wise , try nexit neighbor, 
+return false if we finished the search without finding desination.
+
+ */
+
+private boolean DFS(int n, int[][] edges , int source, int destination){
+        boolean[] seen=new boolean[n];
+        Arrays.fill(seen,false);
+
+        Map<Integer,List<Integer>> graph=new HashMap<>();
+        for(int[] edge: edges){
+            int a=edge[0],b=edge[1];
+            graph.computeIfAbsent(a,val->new ArrayList<Integer>()).add(b);
+            graph.computeIfAbsent(b,val->new ArrayList<Integer>()).add(a);
+        }
+
+        return DFS_REC(graph,source,destination,seen);
+
+}
+
+private boolean DFS_REC(Map<Integer,List<Integer>> graph, int source, int destination, boolean[] seen){
+        if(source==destination) return true;
+        
+        if(!seen[source]){
+            seen[source]=true;
+        for(int neighbor : graph.get(source)){
+             if(DFS_REC(graph,neighbor,destination,seen)) return true;
+            }
+        }
+        return false;
+ }
+
+
+
+//Approach 3 DFS Iterative
+
+private boolean DFS_ITR(int n, int[][] edges, int source, int destination){
+        Stack<Integer> stack =new Stack<>();
+        boolean[] seen=new boolean[n];
+        Arrays.fill(seen,false);
+        Map<Integer,List<Integer>> graph=new HashMap<>();
+
+        for(int[] edge : edges){
+            int a=edge[0],b=edge[1];
+            graph.computeIfAbsent(a,val->new ArrayList<Integer>()).add(b);
+            graph.computeIfAbsent(b,val->new ArrayList<Integer>()).add(a);
+        }
+
+        stack.push(source);
+        seen[source]=true;
+
+        while(!stack.isEmpty()){
+            int curr_node=stack.pop();
+            if(curr_node==destination){return true;}
+
+            for(int neighbor : graph.get(curr_node)){
+                if(!seen[neighbor]){
+                stack.push(neighbor);
+                seen[neighbor]=true;
+                }
+            }
+        }
+
+        return false;
+
+}
+
+//Approach 4 Union Find
 class UnionFind{
       int[] root;
       int[] rank;
@@ -63,7 +214,7 @@ class UnionFind{
          this.rank=new int[n];
         for(int i=0;i<n;i++){
                this.root[i]=i;
-               this.rank[i]=1;
+              this.rank[i]=1;
            }
 
       }
@@ -84,7 +235,7 @@ class UnionFind{
                 rootY=temp;
             }
             this.root[rootX]=rootY;
-            this.rank[rootY]+=this.rank[rootX];
+           this.rank[rootY]+=this.rank[rootX];
         }
     }
 
