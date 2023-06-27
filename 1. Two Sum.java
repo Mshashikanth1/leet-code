@@ -40,7 +40,8 @@ Constraints:
 
 
  */
-class Solution {
+ //brute force solution
+class Solution1 {
     public int[] twoSum(int[] nums, int target) {
         int n=nums.length;
       for(int i=0 ;i<n;i++){
@@ -48,6 +49,41 @@ class Solution {
               if(i!=j && (nums[i]+nums[j])==target) return new int[]{i,j};
           }
       }
-      return new int[]{-1,-1};
+      return null;
     }
 }
+
+
+//use two pass hash Table:
+class Solution2 {
+    public int[] twoSum(int[] nums, int target) {
+            Map<Integer,Integer> hmp=new HashMap<>();
+            int n=nums.length;
+            for(int i=0;i<n;i++) hmp.put(nums[i],i);
+            for(int i=0;i<n;i++){
+                int counter_part=target-nums[i];
+                if(hmp.containsKey(counter_part) && hmp.get(counter_part)!=i){
+                    return new int[]{hmp.get(counter_part),i};
+                }
+            }
+            return null;
+    }
+}
+//use one pass hashtable:
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+          Map<Integer,Integer> hmp=new HashMap<>();
+          int n=nums.length;
+          for(int i=0;i<n;i++){
+              int counter_part=target-nums[i];
+              if(hmp.containsKey(counter_part)){
+                  return new int[]{hmp.get(counter_part),i};
+              }
+              hmp.put(nums[i],i);
+          }
+          return null;
+    }
+}
+
+
+
