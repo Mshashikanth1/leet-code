@@ -1,6 +1,8 @@
 class Solution {
-    public int findMaxK1(int[] nums) {
-        Arrays.sort(nums);
+    public int findMaxK(int[] nums) {
+        // Arrays.sort(nums);
+        // quickSort(nums,0,nums.length-1);
+        mergeSort(nums,0,nums.length-1);
         Set<Integer> hset=new HashSet<>();
         for(int i: nums){
             hset.add(i);
@@ -14,7 +16,7 @@ class Solution {
         return -1;
     }
 
-    public int findMaxK(int[] nums) {
+    public int findMaxK1(int[] nums) {
         int max=Integer.MIN_VALUE;
         Set<Integer> hset=new HashSet<>();
         for(int i: nums){
@@ -25,7 +27,61 @@ class Solution {
         }
         return max==Integer.MIN_VALUE? -1:max;
     }
+
+    /**divide and conquer type of algo
+involves in partitioning on every index,
+partitioning is notthing but choosing a pivot element and put all the elements lesser than that are smaller to left  */
+public void quickSort(int[] arr,int left, int right){
+    if(left<right){
+        int pivotIndex=partition(arr,left,right);
+        quickSort(arr,left,pivotIndex-1);
+        quickSort(arr,pivotIndex+1,right);
+    }
 }
+public int partition(int[] arr, int left, int right){
+    int i=left-1, j=left;
+    while(j<right){
+        if(arr[j]<=arr[right]) swap(arr, ++i, j);
+        j++;
+    }
+    swap(arr, ++i , right);
+    return i;
+}
+public void swap(int[] arr, int left, int right){
+    int temp=arr[left];
+    arr[left]=arr[right];
+    arr[right]=temp;
+}
+
+/**dcAlgo, repeatedly divided the array into halfs and merging them Time :O(log(N)) Space : O(log(N)) */
+public void mergeSort(int[] arr, int left, int right){
+    if(left<right){
+        int mid= left+(right-left)/2;
+        mergeSort(arr, left,mid);
+        mergeSort(arr, mid+1, right);
+        merge(arr, left, mid, right);
+    }
+}
+
+/**merging includes identifying the left & sub arrays  and puttin back the data in sorted fashion to input array */
+public void  merge(int[] arr, int left, int mid, int right){
+    int n=mid-left+1, m=right-mid, i=0, j=0,k=left;
+    int[] nArr=new int[n], mArr=new int[m];
+
+    while(i<n) nArr[i]=arr[left + i++];
+    while(j<m) mArr[j]=arr[mid+1 + j++];
+
+    i=0; j=0;
+    while(i<n && j<m) arr[k++]= nArr[i]<=mArr[j] ? nArr[i++]:mArr[j++];
+
+    while(i<n) arr[k++]=nArr[i++];
+    while(j<m) arr[k++]=mArr[j++];
+}
+
+
+}
+
+
 
 /**
 2441. Largest Positive Integer That Exists With Its Negative
