@@ -1,5 +1,5 @@
 class Solution {
-    public int findMaxK(int[] nums) {
+    public int findMaxK1(int[] nums) {
         // Arrays.sort(nums);
         // quickSort(nums,0,nums.length-1);
         mergeSort(nums,0,nums.length-1);
@@ -16,7 +16,7 @@ class Solution {
         return -1;
     }
 
-    public int findMaxK1(int[] nums) {
+    public int findMaxK(int[] nums) {
         int max=Integer.MIN_VALUE;
         Set<Integer> hset=new HashSet<>();
         for(int i: nums){
