@@ -9,10 +9,11 @@
  * }
  */
 class Solution {
-    public ListNode removeElements(ListNode head, int val) {
+    public ListNode removeElements1(ListNode head, int val) {
 
        ListNode curr=head;
        List<Integer> lis=new ArrayList<>();
+
        while(curr!=null){
         if(curr.val!=val) lis.add(curr.val);
         curr=curr.next;
@@ -27,6 +28,22 @@ class Solution {
 
        head=head.next;
        return head;
+       
+    }
+
+    public ListNode removeElements(ListNode head, int val) {
+
+       ListNode curr=head, newHead=new ListNode(-1), newCurr=newHead;
+       
+       while(curr!=null){
+        if(curr.val!=val) {newCurr.next=curr; newCurr=newCurr.next;}
+        curr=curr.next;
+       }
+        newCurr.next=null;
+
+       
+       newHead=newHead.next;
+       return newHead;
        
     }
 }
