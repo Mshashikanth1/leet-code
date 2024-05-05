@@ -22,7 +22,7 @@ class Solution {
 
 
    
-    public int[] nextGreaterElements(int[] nums) {
+    public int[] nextGreaterElements2(int[] nums) {
 
         int[] ans =new int[nums.length];
         int[] cirNums=new int[nums.length*2];
@@ -40,6 +40,28 @@ class Solution {
             }
 
             ans[i]=mric;
+        }
+        return ans;
+    }
+
+     public int[] nextGreaterElements(int[] nums) {
+
+        int[] ans =new int[nums.length];
+        
+        for(int i=0; i<nums.length; i++){
+            int  mric=Integer.MIN_VALUE;
+           
+            for(int j=i; j<nums.length; j++){
+                if(nums[j] > nums[i]) {mric=nums[j];  break;}
+            }
+
+            if(mric==Integer.MIN_VALUE){
+                for(int j=0; j<=i; j++){
+                    if(nums[j] > nums[i]) {mric=nums[j];  break;}
+                }
+            }
+
+            ans[i]=mric==Integer.MIN_VALUE ? -1 : mric;
         }
         return ans;
     }
