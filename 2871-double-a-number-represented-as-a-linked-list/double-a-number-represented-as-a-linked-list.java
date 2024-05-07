@@ -21,8 +21,8 @@ class Solution {
 
         while(!stack.isEmpty()){
             ListNode dig=stack.pop();
-            int num= ((dig.val*2 +carry))%10;
-            carry=((dig.val*2+carry))/10;
+            int  mul=(dig.val*2 +carry), num= mul%10;
+            carry=mul/10;
             dig.val=num;
         }
 
